@@ -15,7 +15,7 @@ model = dict(
     ),
     bbox_head=dict(
         type='SSDRotateHead',
-        num_class=1, #len(['Car', 'Pedestrian', 'Cyclist']),
+        num_class=len(['Car', 'Pedestrian', 'Cyclist']),
         num_output_filters=256,
         num_anchor_per_loc=2,
         use_sigmoid_cls=True,
@@ -42,16 +42,16 @@ train_cfg = dict(
                 neg_iou_thr=0.45,
                 min_pos_iou=0.45,  # this one is to limit the force assignment
             ),
-            # Pedestrian=dict(
-            #     pos_iou_thr=0.5,
-            #     neg_iou_thr=0.35,
-            #     min_pos_iou=0.35,  # this one is to limit the force assignment
-            # ),
-            # Cyclist=dict(
-            #     pos_iou_thr=0.5,
-            #     neg_iou_thr=0.35,
-            #     min_pos_iou=0.35,  # this one is to limit the force assignment
-            # ),
+            Pedestrian=dict(
+                pos_iou_thr=0.5,
+                neg_iou_thr=0.35,
+                min_pos_iou=0.35,  # this one is to limit the force assignment
+            ),
+            Cyclist=dict(
+                pos_iou_thr=0.5,
+                neg_iou_thr=0.35,
+                min_pos_iou=0.35,  # this one is to limit the force assignment
+            ),
             ignore_iof_thr=-1,
             similarity_fn='NearestIouSimilarity'
         ),
@@ -81,7 +81,7 @@ test_cfg = dict(
 )
 # dataset settings
 dataset_type = 'KittiLiDAR'
-data_root = '/home/billyhe/hdd/KITTI/'
+data_root = '/home/billyhe/data/KITTI/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 data = dict(
@@ -99,14 +99,14 @@ data = dict(
         with_mask=False,
         with_label=True,
         with_point=True,
-        class_names = ['Car'],#, 'Pedestrian', 'Cyclist'],
+        class_names = ['Car', 'Pedestrian', 'Cyclist'],
         augmentor=dict(
             type='PointAugmentor',
             root_path=data_root,
             info_path=data_root + 'kitti_dbinfos_train.pkl',
-            sample_classes=['Car'],#, 'Pedestrian', 'Cyclist'],
-            min_num_points=[5],# 5, 5],
-            sample_max_num=[15],# 10, 10],
+            sample_classes=['Car', 'Pedestrian', 'Cyclist'],
+            min_num_points=[5, 5, 5],
+            sample_max_num=[15, 10, 10],
             removed_difficulties=[-1],
             global_rot_range=[-0.78539816, 0.78539816],
             gt_rot_range=[-0.78539816, 0.78539816],
@@ -128,20 +128,20 @@ data = dict(
                 anchor_offsets=[0.2, -39.8, -1.78],
                 rotations=[0, 1.57],
             ),
-            # Pedestrian=dict(
-            #     type='AnchorGeneratorStride',
-            #     sizes=[0.6, 0.8, 1.73],
-            #     anchor_strides=[0.4, 0.4, 1.0],
-            #     anchor_offsets=[0.2, -39.8, -1.78],
-            #     rotations=[0, 1.57],
-            # ),
-            # Cyclist=dict(
-            #     type='AnchorGeneratorStride',
-            #     sizes=[0.6, 1.76, 1.73],
-            #     anchor_strides=[0.4, 0.4, 1.0],
-            #     anchor_offsets=[0.2, -39.8, -1.78],
-            #     rotations=[0, 1.57],
-            # )
+            Pedestrian=dict(
+                type='AnchorGeneratorStride',
+                sizes=[0.6, 0.8, 1.73],
+                anchor_strides=[0.4, 0.4, 1.0],
+                anchor_offsets=[0.2, -39.8, -1.78],
+                rotations=[0, 1.57],
+            ),
+            Cyclist=dict(
+                type='AnchorGeneratorStride',
+                sizes=[0.6, 1.76, 1.73],
+                anchor_strides=[0.4, 0.4, 1.0],
+                anchor_offsets=[0.2, -39.8, -1.78],
+                rotations=[0, 1.57],
+            )
         ),
         anchor_area_threshold=1,
         out_size_factor=8,
@@ -159,7 +159,7 @@ data = dict(
         with_mask=False,
         with_label=False,
         with_point=True,
-        class_names=['Car'],# 'Pedestrian', 'Cyclist'],
+        class_names=['Car', 'Pedestrian', 'Cyclist'],
         generator=dict(
             type='VoxelGenerator',
             voxel_size=[0.05, 0.05, 0.1],
@@ -175,20 +175,20 @@ data = dict(
                 anchor_offsets=[0.2, -39.8, -1.78],
                 rotations=[0, 1.57],
             ),
-            # Pedestrian=dict(
-            #     type='AnchorGeneratorStride',
-            #     sizes=[0.6, 0.8, 1.73],
-            #     anchor_strides=[0.4, 0.4, 1.0],
-            #     anchor_offsets=[0.2, -39.8, -1.78],
-            #     rotations=[0, 1.57],
-            # ),
-            # Cyclist=dict(
-            #     type='AnchorGeneratorStride',
-            #     sizes=[0.6, 1.76, 1.73],
-            #     anchor_strides=[0.4, 0.4, 1.0],
-            #     anchor_offsets=[0.2, -39.8, -1.78],
-            #     rotations=[0, 1.57],
-            # )
+            Pedestrian=dict(
+                type='AnchorGeneratorStride',
+                sizes=[0.6, 0.8, 1.73],
+                anchor_strides=[0.4, 0.4, 1.0],
+                anchor_offsets=[0.2, -39.8, -1.78],
+                rotations=[0, 1.57],
+            ),
+            Cyclist=dict(
+                type='AnchorGeneratorStride',
+                sizes=[0.6, 1.76, 1.73],
+                anchor_strides=[0.4, 0.4, 1.0],
+                anchor_offsets=[0.2, -39.8, -1.78],
+                rotations=[0, 1.57],
+            )
         ),
         anchor_area_threshold=1,
         out_size_factor=8,
